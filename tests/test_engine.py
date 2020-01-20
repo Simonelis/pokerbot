@@ -48,3 +48,20 @@ def test_flop():
     game.deal()
     game.flop()
     assert len(game.board) == 3
+
+def test_turn():
+    game = Game(players=2)
+    game.deal()
+    game.flop()
+    game.turn()
+    assert len(game.board) == 4
+    assert len(game.deck.cards) == 44
+
+def test_river():
+    game = Game(players=5) 
+    game.deal()
+    game.flop()
+    game.turn()
+    game.river()
+    assert len(game.board) == 5
+    assert len(game.deck.cards) == 37

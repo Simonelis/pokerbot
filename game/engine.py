@@ -54,3 +54,9 @@ class Game():
 
     def flop(self):
         self.board = [self.deck.draw() for card in range(3)]
+
+    def turn(self):
+        self.board.append(self.deck.draw())
+
+    def river(self):
+        self.board.append(self.deck.draw())
