@@ -37,6 +37,7 @@ class Game():
         self.deck = Deck()
         self.button_position = button_position
         self.pot = 0
+        self.board = []
 
     def deal(self):
         for player in self.players:
@@ -50,3 +51,6 @@ class Game():
 
         self.players[sb_position].stack -= 0.5
         self.players[bb_position].stack -= 1
+
+    def flop(self):
+        self.board = [self.deck.draw() for card in range(3)]

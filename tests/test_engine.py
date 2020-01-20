@@ -43,3 +43,8 @@ def test_big_blinds_and_button_and_pot():
     assert game.players[2].stack == 100
     assert game.players[3].stack == 99.5
     
+def test_flop():
+    game = Game(players=2)
+    game.deal()
+    game.flop()
+    assert len(game.board) == 3
