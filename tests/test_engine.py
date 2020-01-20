@@ -31,3 +31,15 @@ def test_game_can_deal_cards():
     assert len(game.deck) == 48
     assert len(game.players[0].hole_cards) == 2
     assert len(game.players[1].hole_cards) == 2
+
+def test_big_blinds_and_button_and_pot():
+    game = Game(players=4, button_position=2)
+    game.deal()
+    game.post_blinds()
+
+    assert game.pot == 1.5
+    assert game.players[0].stack == 99
+    assert game.players[1].stack == 100
+    assert game.players[2].stack == 100
+    assert game.players[3].stack == 99.5
+    

@@ -31,10 +31,22 @@ class Deck():
         return len(self.cards)
 
 class Game():
-    def __init__(self, players):
+
+    def __init__(self, players, button_position=0):
         self.players = tuple(Player([], 100) for index in range(players))
         self.deck = Deck()
+        self.button_position = button_position
+        self.pot = 0
 
     def deal(self):
         for player in self.players:
             player.hole_cards = self.deck.draw(), self.deck.draw()
+
+    def post_blinds(self):
+        sb_position = (self.button_position+1) % len(self.players)
+        bb_position = (self.button_position+2) % len(self.players)
+
+        self.pot += 1.5
+
+        self.players[sb_position].stack -= 0.5
+        self.players[bb_position].stack -= 1
