@@ -24,3 +24,10 @@ def test_game_has_deck():
     game = Game(players=2)
     deck = game.deck
     assert len(deck.cards)
+
+def test_game_can_deal_cards():
+    game = Game(players=2)
+    game.deal()
+    assert len(game.deck) == 48
+    assert len(game.players[0].hole_cards) == 2
+    assert len(game.players[1].hole_cards) == 2
