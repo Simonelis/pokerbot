@@ -1,12 +1,17 @@
 import random
 from collections import namedtuple
 
-Card = namedtuple('Card', ['rank', 'suit'])
+Card = namedtuple("Card", ["rank", "suit"])
 
 RANKS = [14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]
-SUITS = ['h', 'd', 'c', 's']
+SUITS = ["h", "d", "c", "s"]
 
-class Player():
+# def is_straight(hand):
+#     """hand is a collection of 7 cards"""
+#     return
+
+
+class Player:
     def __init__(self, hole_cards=None, stack=100):
         if hole_cards is not None:
             self.hole_cards = hole_cards
@@ -14,8 +19,8 @@ class Player():
             self.hole_cards = []
         self.stack = stack
 
-class Deck():
 
+class Deck:
     def __init__(self):
         self.cards = [Card(rank, suit) for rank in RANKS for suit in SUITS]
 
@@ -30,8 +35,8 @@ class Deck():
     def __len__(self):
         return len(self.cards)
 
-class Game():
 
+class Game:
     def __init__(self, players, button_position=0):
         self.players = tuple(Player([], 100) for index in range(players))
         self.deck = Deck()
@@ -44,8 +49,8 @@ class Game():
             player.hole_cards = self.deck.draw(), self.deck.draw()
 
     def post_blinds(self):
-        sb_position = (self.button_position+1) % len(self.players)
-        bb_position = (self.button_position+2) % len(self.players)
+        sb_position = (self.button_position + 1) % len(self.players)
+        bb_position = (self.button_position + 2) % len(self.players)
 
         self.pot += 1.5
 
@@ -53,10 +58,18 @@ class Game():
         self.players[bb_position].stack -= 1
 
     def flop(self):
+        """Draws three cards from the deck and adds them the board"""
         self.board = [self.deck.draw() for card in range(3)]
 
     def turn(self):
+        """Draws one card from the deck and adds it to the board"""
         self.board.append(self.deck.draw())
 
     def river(self):
+        """Draws one card from the deck and adds it to the board"""
         self.board.append(self.deck.draw())
+
+    def get_player_hand(self, player):
+        hole_cards = self.players[player].hole_cards
+        player_hand = list(hole_cards) + list(self.board)
+        return player_hand
