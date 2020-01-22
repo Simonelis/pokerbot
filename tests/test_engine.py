@@ -1,6 +1,7 @@
 import pytest
 
-from game.engine import Deck, Game
+from game.engine import Card, Deck, Game
+from game.engine import is_straight
 
 
 def test_deck():
@@ -95,3 +96,9 @@ def test_player_hand_has_right_number_cards():
     game.river()
     hand = game.get_player_hand(player=2)
     assert len(hand) == 7
+
+
+def test_is_straight():
+    hand = [14, 13, 12, 11, 10, 9, 8]
+    hand = [Card(rank, "h") for rank in hand]
+    assert is_straight(hand)

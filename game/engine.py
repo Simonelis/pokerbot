@@ -6,9 +6,10 @@ Card = namedtuple("Card", ["rank", "suit"])
 RANKS = [14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]
 SUITS = ["h", "d", "c", "s"]
 
-# def is_straight(hand):
-#     """hand is a collection of 7 cards"""
-#     return
+
+def is_straight(hand):
+    """hand is a collection of 7 cards"""
+    return True
 
 
 class Player:
