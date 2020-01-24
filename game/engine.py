@@ -8,8 +8,69 @@ SUITS = ["h", "d", "c", "s"]
 
 
 def is_straight(hand):
-    """hand is a collection of 7 cards"""
-    return True
+    """hand is a collection of 7 cards.
+    Returns highest straight"""
+    ranks = [card.rank for card in hand]
+    ranks = list(sorted(ranks, reverse=True))
+
+    if ranks[0] == 14:
+        ranks.append(1)
+    straight_counter = 1
+    previous_rank = ranks[0]
+    straight_rank = ranks[0]
+    for rank in ranks[1:]:
+        if previous_rank - 1 == rank:
+            straight_counter += 1
+        elif previous_rank == rank:
+            straight_counter += 0
+        else:
+            straight_counter = 1
+            straight_rank = rank
+        if straight_counter == 5:
+            return straight_rank
+        previous_rank = rank
+    return False
+
+
+def is_flush(hand):
+    suits = [card.suit for card in hand]
+    suits_set = set(suits)
+    if len(suits_set) > 3:
+        return False
+    for suit in suits_set:
+        if suits.count(suit) > 4:
+            ranks = [card.rank for card in hand if card.suit == suit]
+            return max(ranks)
+    return False
+
+
+def is_straight_flush(hand):
+    flush = is_flush(hand)
+    if flush:
+        straight = is_straight(hand)
+        if flush == straight:
+            return flush
+    return False
+
+
+def is_quads(hand):
+    ranks = [card.rank for card in hand]
+    ranks_set = set(ranks)
+    if len(ranks_set) > 4:
+        return False
+    for rank in ranks_set:
+        if ranks.count(rank) == 4:
+            ranks_set.remove(rank)
+            return (rank, max(ranks_set))
+    return False
+
+
+def hand_strength(hand):
+    is_straight_flush(hand)
+    is_quads(hand)
+    is_flush(hand)
+    is_straight(hand)
+    return 1
 
 
 class Player:
