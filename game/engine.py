@@ -1,4 +1,3 @@
-import random
 from collections import namedtuple
 
 Card = namedtuple("Card", ["rank", "suit"])
@@ -45,11 +44,14 @@ def is_flush(hand):
 
 
 def is_straight_flush(hand):
-    flush = is_flush(hand)
-    if flush:
-        straight = is_straight(hand)
-        if flush == straight:
-            return flush
+    suits = [card.suit for card in hand]
+    suits_set = set(suits)
+
+    for suit in suits_set:
+        hand_suit = [card for card in hand if card.suit == suit]
+        straight = is_straight(hand_suit)
+        if straight:
+            return (1, straight)
     return False
 
 
@@ -65,12 +67,70 @@ def is_quads(hand):
     return False
 
 
+def is_full_house_trips_two_pair_high_card(hand):
+    ranks = [card.rank for card in hand]
+    counts = {}
+    for rank in ranks:
+        if rank in counts:
+            counts[rank] += 1
+        else:
+            counts[rank] = 1
+    trips = []
+    pairs = []
+    singles = []
+    for rank, count in counts.items():
+        if count == 3:
+            trips.append(rank)
+        elif count == 2:
+            pairs.append(rank)
+        else:
+            singles.append(rank)
+    trips = list(sorted(trips, reverse=True))
+    pairs = list(sorted(pairs, reverse=True))
+    singles = list(sorted(singles, reverse=True))
+
+    if len(trips) >= 1:
+        if len(pairs) >= 1:
+            return (3, (max(trips), max(pairs)))
+        elif len(trips) == 2:
+            return (3, (max(trips), min(trips)))
+        else:
+            return (6, (max(trips),) + tuple(singles[:2]))
+    elif len(pairs) == 3:
+        return (7, (pairs[0], pairs[1], max(pairs[2], max(singles))))
+    elif len(pairs) == 2:
+        return (7, (max(pairs), min(pairs), max(singles)))
+    elif len(pairs) == 1:
+        return (8, (pairs[0],) + tuple(singles[:3]))
+    return (9, tuple(singles[:5]))
+
+
 def hand_strength(hand):
-    is_straight_flush(hand)
-    is_quads(hand)
-    is_flush(hand)
-    is_straight(hand)
-    return 1
+    quads_result = is_quads(hand)
+    flush_result = is_flush(hand)
+    straight_result = is_straight(hand)
+
+    # straight flush
+    if flush_result and straight_result:
+        straight_flush_result = is_straight_flush(hand)
+        if straight_flush_result:
+            return (1, straight_flush_result)
+    # quads
+    if quads_result:
+        return (2, quads_result)
+
+    # the rest with ranks
+    the_rest = is_full_house_trips_two_pair_high_card(hand)
+    if the_rest[0] == 3:
+        return the_rest
+    # flush
+    if flush_result:
+        return (4, (flush_result,))
+    # straight
+    if straight_result:
+        return (5, (straight_result,))
+
+    return the_rest
 
 
 class Player:
