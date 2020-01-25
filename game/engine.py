@@ -31,7 +31,6 @@ def is_straight(hand):
         previous_rank = rank
     return False
 
-
 def is_flush(hand):
     suits = [card.suit for card in hand]
     suits_set = set(suits)
@@ -139,9 +138,11 @@ def winning_hand(hand1, hand2):
     in strength, returns -1"""
     strength1 = hand_strength(hand1)
     strength2 = hand_strength(hand2)
-    if strength1[0] > strength2[0]:
+    # The strengths seem to be inverted here, but they are
+    # correct, because the strongest hand is "1" - straight flush.
+    if strength1[0] < strength2[0]:
         return 0
-    elif strength1[0] < strength2[0]:
+    elif strength1[0] > strength2[0]:
         return 1
     else:
         for ind1, ind2 in zip(strength1[1], strength2[1]):
@@ -180,7 +181,7 @@ class Deck:
 
 
 class Game:
-    def __init__(self, players, button_position=0):
+    def __init__(self, players=None, button_position=0):
         self.players = tuple(Player([], 100) for index in range(players))
         self.deck = Deck()
         self.button_position = button_position
