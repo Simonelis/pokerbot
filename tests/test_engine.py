@@ -187,7 +187,7 @@ def test_is_straight_flush():
                 Card(4, "s"),
                 Card(2, "s"),
             ],
-            14,
+            (1, 14),
         ),
     ]
     test_outcomes = [is_straight_flush(hand) == outcome for hand, outcome in situations]

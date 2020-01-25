@@ -1,4 +1,5 @@
 from collections import namedtuple
+import random
 
 Card = namedtuple("Card", ["rank", "suit"])
 
@@ -131,6 +132,26 @@ def hand_strength(hand):
         return (5, (straight_result,))
 
     return the_rest
+
+
+def winning_hand(hand1, hand2):
+    """Returns index of winning hand. If the hands are equal
+    in strength, returns -1"""
+    strength1 = hand_strength(hand1)
+    strength2 = hand_strength(hand2)
+    if strength1[0] > strength2[0]:
+        return 0
+    elif strength1[0] < strength2[0]:
+        return 1
+    else:
+        for ind1, ind2 in zip(strength1[1], strength2[1]):
+            if ind1 > ind2:
+                return 0
+            elif ind1 < ind2:
+                return 1
+            else:
+                continue
+    return -1
 
 
 class Player:
